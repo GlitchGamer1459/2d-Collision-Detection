@@ -2,6 +2,7 @@
 #include <chrono>
 #include <thread>
 #include <functional>
+#include "engine.h"
 using namespace std;
 
 class Target {
@@ -35,20 +36,7 @@ void start() {
 }
 
 void update() {
-	switch (tickCount) {
-	case 60:
-		cout << "one";
-		break;
-	case 120:
-		cout << "two";
-		break;
-	case 180:
-		cout << "three";
-		break;
-	case 240:
-		cout << "four";
-		break;
-	}
+	
 
 	if (tickCount == 300) {
 		cout << "game tick: " << tickCount << endl;
@@ -57,21 +45,9 @@ void update() {
 	tickCount++;
 }
 
-void begin_updateLoop(function<void(void)> func, unsigned int interval) {
-	start();
-
-	thread([func, interval]()
-		{
-			while (true)
-			{
-				auto x = chrono::steady_clock::now() + chrono::milliseconds(interval);
-				func();
-				this_thread::sleep_until(x);
-			}
-		}).detach();
-}
-
 int main() {
-	begin_updateLoop(update, 16);
+	int framerate = 60;
+
+	begin_updateLoop(start, update, (1000 / framerate));
 	while (true);
 }

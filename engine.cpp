@@ -1,30 +1,29 @@
 #include <chrono>
 #include <thread>
 #include <functional>
-using namespace std;
 
-void begin_updateLoop(function<void(void)> func, unsigned int interval) {
-	thread([func, interval]()
+void begin_updateLoop(std::function<void(void)> func, unsigned int interval) {
+	std::thread([func, interval]()
 		{
 			while (true)
 			{
-				auto x = chrono::steady_clock::now() + chrono::milliseconds(interval);
+				auto x = std::chrono::steady_clock::now() + std::chrono::milliseconds(interval);
 				func();
-				this_thread::sleep_until(x);
+				std::this_thread::sleep_until(x);
 			}
 		}).detach();
 }
 
-void begin_updateLoop(function<void(void)> prereqFunc, function<void(void)> func, unsigned int interval) {
+void begin_updateLoop(std::function<void(void)> prereqFunc, std::function<void(void)> func, unsigned int interval) {
 	prereqFunc();
 
-	thread([func, interval]()
+	std::thread([func, interval]()
 		{
 			while (true)
 			{
-				auto x = chrono::steady_clock::now() + chrono::milliseconds(interval);
+				auto x = std::chrono::steady_clock::now() + std::chrono::milliseconds(interval);
 				func();
-				this_thread::sleep_until(x);
+				std::this_thread::sleep_until(x);
 			}
 		}).detach();
 }
